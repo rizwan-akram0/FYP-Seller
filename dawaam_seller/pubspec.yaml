@@ -1,0 +1,57 @@
+name: dawaam_seller
+description: "A new Flutter project."
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: '>=3.3.0 <4.0.0'
+
+dependencies:
+  cached_network_image: ^3.3.1
+  cupertino_icons: ^1.0.6
+  flutter:
+    sdk: flutter
+  get: ^4.6.6
+  http: ^1.2.1
+  image_picker: ^1.0.7
+  page_transition: ^2.1.0
+  permission_handler: ^11.3.0
+  shared_preferences: ^2.2.3
+  shimmer_pro: ^0.0.6
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/
+    - assets/images/
+    - assets/icons/
+    - assets/fonts/
+
+  fonts:
+    - family: PlusJakartaSans-Bold
+      fonts:
+        - asset: assets/fonts/PlusJakartaSans-Bold.ttf
+    - family: PlusJakartaSans-Light
+      fonts:
+        - asset: assets/fonts/PlusJakartaSans-Light.ttf
+    - family: PlusJakartaSans-Medium
+      fonts:
+        - asset: assets/fonts/PlusJakartaSans-Medium.ttf
+    - family: PlusJakartaSans-Regular
+      fonts:
+        - asset: assets/fonts/PlusJakartaSans-Regular.ttf
+    - family: PlusJakartaSans-SemiBlod
+      fonts:
+        - asset: assets/fonts/PlusJakartaSans-SemiBold.ttf
+    - family: Poppins-Bold
+      fonts:
+        - asset: assets/fonts/Poppins-Bold.ttf
+    - family: Poppins-Regular
+      fonts:
+        - asset: assets/fonts/Poppins-Regular.ttf
