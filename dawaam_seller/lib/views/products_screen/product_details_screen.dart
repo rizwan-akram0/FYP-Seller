@@ -1,10 +1,11 @@
 import 'package:dawaam_seller/consts/consts.dart';
 
 class ProductDetailsScreen extends StatelessWidget {
-  const ProductDetailsScreen({super.key});
+  final Product product;
+  const ProductDetailsScreen({super.key, required this.product});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) { 
     return Scaffold(
       appBar: AppBar(
         title: const Text(

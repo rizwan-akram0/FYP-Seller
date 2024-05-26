@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:dawaam_seller/consts/consts.dart';
+import 'package:dawaam_seller/models/user_model.dart';
 import 'package:http/http.dart' as http;
 
 class AuthController extends GetxController {
@@ -92,6 +93,22 @@ class AuthController extends GetxController {
       address.value = '';
 
       Get.offAll(() => const LoginScreen(), transition: Transition.rightToLeft);
+    } catch (e) {
+      Get.snackbar('Error', e.toString());
+    }
+  }
+
+  Stream<List<User>> getUsers() async* {
+    try {
+      final response = await http.get(Uri.parse('$baseUrl/user/get_all_users'));
+
+      if (response.statusCode == 200) {
+        log(response.body);
+        final users = usersFromJson(response.body).data.user;
+        yield users;
+      } else {
+        Get.snackbar('Error', json.decode(response.body)['message']);
+      }
     } catch (e) {
       Get.snackbar('Error', e.toString());
     }

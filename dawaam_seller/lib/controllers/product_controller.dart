@@ -17,6 +17,7 @@ class ProductController extends GetxController {
   final image3 = ''.obs;
   final image4 = ''.obs;
   final image5 = ''.obs;
+  final totalOrders = '0'.obs;
 
   final totalProducts = '0'.obs;
 
@@ -24,6 +25,28 @@ class ProductController extends GetxController {
   void onInit() {
     super.onInit();
     getTotalProducts();
+    getTotalOrders();
+  }
+
+  getTotalOrders() async {
+    try {
+      final authController = Get.put(AuthController());
+      final response = await http.get(
+        Uri.parse(
+            '$baseUrl/order/total_orders_by_seller/${authController.userId.value}'),
+      );
+      log('User IUD: ${authController.userId.toString()}');
+
+      if (response.statusCode == 200) {
+        log(response.body);
+        totalOrders.value =
+            json.decode(response.body)['totalOrders'].toString();
+      } else {
+        Get.snackbar('Error', json.decode(response.body)['message']);
+      }
+    } catch (e) {
+      Get.snackbar('Error', e.toString());
+    }
   }
 
   addProduct() async {
@@ -205,6 +228,33 @@ class ProductController extends GetxController {
     final status = await Permission.storage.status;
     if (!status.isGranted) {
       await Permission.storage.request();
+    }
+  }
+
+  Stream<List<Product>> getPopularProducts() async* {
+    try {
+      final authController = Get.put(AuthController());
+      final response = await http.get(
+        Uri.parse(
+            '$baseUrl/product/get_popular_products_by_seller/${authController.userId.value}'),
+      );
+
+      if (response.statusCode == 200) {
+        log(response.body);
+        List<Product> products;
+
+        products = (json.decode(response.body) as List)
+            .map((data) => Product.fromJson(data))
+            .toList();
+
+        yield products;
+      } else {
+        log(json.decode(response.body)['message']);
+        Get.snackbar('Error', json.decode(response.body)['message']);
+      }
+    } catch (e) {
+      log(e.toString());
+      Get.snackbar('Error', e.toString());
     }
   }
 }

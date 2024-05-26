@@ -72,7 +72,10 @@ class ProductsScreen extends StatelessWidget {
                 return Card(
                   child: ListTile(
                       onTap: () {
-                        Get.to(() => const ProductDetailsScreen(),
+                        Get.to(
+                            () => ProductDetailsScreen(
+                                  product: product,
+                                ),
                             transition: Transition.rightToLeftWithFade);
                       },
                       leading: ClipRRect(

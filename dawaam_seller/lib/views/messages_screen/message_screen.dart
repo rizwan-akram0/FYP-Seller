@@ -1,10 +1,12 @@
 import 'package:dawaam_seller/consts/consts.dart';
+import 'package:dawaam_seller/models/user_model.dart';
 
 class MessagesScreen extends StatelessWidget {
   const MessagesScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final authController = Get.put(AuthController());
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -16,22 +18,42 @@ class MessagesScreen extends StatelessWidget {
           ),
         ),
       ),
-      body: ListView.builder(
-        itemCount: 10,
-        itemBuilder: (context, index) {
-          return Card(
-            child: ListTile(
-              onTap: () {
-                Get.to(() => const ChatScreen(),
-                    transition: Transition.rightToLeftWithFade);
-              },
-              leading: const CircleAvatar(
-                backgroundImage: AssetImage(profile),
+      body: StreamBuilder<List<User>>(
+        stream: authController.getUsers(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+          if (!snapshot.hasData) {
+            return const Center(
+              child: Text(
+                'No messages found',
               ),
-              title: Text('User $index'),
-              subtitle: Text('Message $index'),
-              trailing: const Text('12:00 PM'),
-            ),
+            );
+          }
+          final users = snapshot.data!;
+
+          return ListView.builder(
+            itemCount: snapshot.data!.length,
+            itemBuilder: (context, index) {
+              return Card(
+                child: ListTile(
+                  onTap: () {
+                    Get.to(
+                        () => ChatScreen(
+                            senderId: authController.userId.value,
+                            recipientId: '2'),
+                        transition: Transition.rightToLeftWithFade);
+                  },
+                  leading: Image.asset(icMessages, width: 40, height: 40),
+                  title: Text(users[index].name),
+                  subtitle: const Text('Message '),
+                  // trailing: const Text('12:00 PM'),
+                ),
+              );
+            },
           );
         },
       ),
