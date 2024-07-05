@@ -34,6 +34,7 @@ class OrderElement {
   String orderId;
   String userId;
   String sellerId;
+  String shippingAddress;
   List<Item> items;
   int totalAmount;
   String status;
@@ -46,6 +47,7 @@ class OrderElement {
     required this.orderId,
     required this.userId,
     required this.sellerId,
+    required this.shippingAddress,
     required this.items,
     required this.totalAmount,
     required this.status,
@@ -59,6 +61,7 @@ class OrderElement {
         orderId: json["orderId"],
         userId: json["userId"],
         sellerId: json["sellerId"],
+        shippingAddress: json["shippingAddress"],
         items: List<Item>.from(json["items"].map((x) => Item.fromJson(x))),
         totalAmount: json["totalAmount"],
         status: json["status"],
@@ -72,6 +75,7 @@ class OrderElement {
         "orderId": orderId,
         "userId": userId,
         "sellerId": sellerId,
+        "shippingAddress": shippingAddress,
         "items": List<dynamic>.from(items.map((x) => x.toJson())),
         "totalAmount": totalAmount,
         "status": status,
@@ -112,8 +116,8 @@ class Item {
 class ProductId {
   String id;
   String name;
-  int price;
-  int oldPrice;
+  int? price; // Make price nullable
+  int oldPrice = 0;
   String description;
   List<String> images;
   String category;
@@ -130,7 +134,7 @@ class ProductId {
   ProductId({
     required this.id,
     required this.name,
-    required this.price,
+    this.price, // Nullable field
     required this.oldPrice,
     required this.description,
     required this.images,
@@ -149,8 +153,8 @@ class ProductId {
   factory ProductId.fromJson(Map<String, dynamic> json) => ProductId(
         id: json["_id"],
         name: json["name"],
-        price: json["price"],
-        oldPrice: json["oldPrice"],
+        price: json["price"], // Assign directly, can be null
+        oldPrice: json["oldPrice"] ?? 0,
         description: json["description"],
         images: List<String>.from(json["images"].map((x) => x)),
         category: json["category"],

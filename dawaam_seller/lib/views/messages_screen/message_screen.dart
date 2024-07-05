@@ -44,7 +44,7 @@ class MessagesScreen extends StatelessWidget {
                     Get.to(
                         () => ChatScreen(
                             senderId: authController.userId.value,
-                            recipientId: '2'),
+                            recipientId: users[index].id),
                         transition: Transition.rightToLeftWithFade);
                   },
                   leading: Image.asset(icMessages, width: 40, height: 40),

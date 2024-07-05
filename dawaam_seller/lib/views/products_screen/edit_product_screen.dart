@@ -1,11 +1,14 @@
 import 'package:dawaam_seller/consts/consts.dart';
+import 'package:flutter/material.dart';
 
-class AddNewProductScreen extends StatelessWidget {
-  const AddNewProductScreen({super.key});
+class EditProductScreen extends StatelessWidget {
+  final String productId;
+  const EditProductScreen({super.key, required this.productId});
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(ProductController());
+    final ProductController controller = Get.put(ProductController());
+
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -367,150 +370,11 @@ class AddNewProductScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(
-                height: 16,
-              ),
-              Row(
-                children: [
-                  InkWell(
-                    onTap: () {
-                      controller.pickImage();
-                    },
-                    child: Container(
-                      width: MediaQuery.of(context).size.width * 0.46,
-                      height: 50,
-                      decoration: BoxDecoration(
-                        border: Border.all(),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Center(
-                        child: Obx(() => Text(
-                              controller.image1.value.isEmpty
-                                  ? 'Upload Image'
-                                  : 'Image 1 Uploaded',
-                              style: const TextStyle(
-                                fontSize: 14,
-                                fontFamily: medium,
-                              ),
-                            )),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  InkWell(
-                    onTap: () {
-                      controller.pickImage();
-                    },
-                    child: Container(
-                      width: MediaQuery.of(context).size.width * 0.46,
-                      height: 50,
-                      decoration: BoxDecoration(
-                        border: Border.all(),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Center(
-                        child: Obx(() => Text(
-                              controller.image2.value.isEmpty
-                                  ? 'Upload Image'
-                                  : 'Image 2 Uploaded',
-                              style: const TextStyle(
-                                fontSize: 14,
-                                fontFamily: medium,
-                              ),
-                            )),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 16,
-              ),
-              Row(
-                children: [
-                  InkWell(
-                    onTap: () {
-                      controller.pickImage();
-                    },
-                    child: Container(
-                      width: MediaQuery.of(context).size.width * 0.46,
-                      height: 50,
-                      decoration: BoxDecoration(
-                        border: Border.all(),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Center(
-                        child: Obx(() => Text(
-                              controller.image3.value.isEmpty
-                                  ? 'Upload Image'
-                                  : 'Image 3 Uploaded',
-                              style: const TextStyle(
-                                fontSize: 14,
-                                fontFamily: medium,
-                              ),
-                            )),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  InkWell(
-                    onTap: () {
-                      controller.pickImage();
-                    },
-                    child: Container(
-                      width: MediaQuery.of(context).size.width * 0.46,
-                      height: 50,
-                      decoration: BoxDecoration(
-                        border: Border.all(),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Center(
-                        child: Obx(() => Text(
-                              controller.image4.value.isEmpty
-                                  ? 'Upload Image'
-                                  : 'Image 4 Uploaded',
-                              style: const TextStyle(
-                                fontSize: 14,
-                                fontFamily: medium,
-                              ),
-                            )),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 16,
+                height: 20,
               ),
               InkWell(
                 onTap: () {
-                  controller.pickImage();
-                },
-                child: Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: 50,
-                  decoration: BoxDecoration(
-                    border: Border.all(),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Center(
-                    child: Obx(() => Text(
-                          controller.image5.value.isEmpty
-                              ? 'Upload Image'
-                              : 'Image 5 Uploaded',
-                          style: const TextStyle(
-                            fontSize: 14,
-                            fontFamily: medium,
-                          ),
-                        )),
-                  ),
-                ),
-              ),
-              const SizedBox(
-                height: 16,
-              ),
-              InkWell(
-                onTap: () {
-                  controller.addProduct();
+                  controller.editProduct(productId, context);
                 },
                 child: Container(
                   width: MediaQuery.of(context).size.width,
@@ -521,7 +385,7 @@ class AddNewProductScreen extends StatelessWidget {
                   ),
                   child: const Center(
                     child: Text(
-                      'Add Product',
+                      'Edit Product',
                       style: TextStyle(
                         fontSize: 14,
                         fontFamily: medium,

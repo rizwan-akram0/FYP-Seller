@@ -21,12 +21,55 @@ class LoginScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Login',
-              style: TextStyle(
-                fontFamily: bold,
-                fontSize: 24,
-                color: kPrimaryLightColor,
+            InkWell(
+              onLongPress: () {
+                showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: const Text("Change URL's"),
+                    content: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          TextFormField(
+                            controller: controller.urlController,
+                            decoration: const InputDecoration(
+                              labelText: "URL",
+                              hintText: "https://api.dawaamfoods.com",
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: const Text("Cancel"),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          final prefs = SharedPreferences.getInstance();
+                          prefs.then((value) {
+                            value.setString(
+                                "baseUrl", controller.urlController.text);
+                          });
+                          URLServices().setURL();
+                          Navigator.pop(context);
+                        },
+                        child: const Text("Save"),
+                      ),
+                    ],
+                  ),
+                );
+              },
+              child: const Text(
+                'Login',
+                style: TextStyle(
+                  fontFamily: bold,
+                  fontSize: 24,
+                  color: kPrimaryLightColor,
+                ),
               ),
             ),
             const SizedBox(

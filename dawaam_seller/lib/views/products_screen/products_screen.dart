@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dawaam_seller/consts/consts.dart';
 import 'package:shimmer_pro/shimmer_pro.dart';
@@ -22,6 +24,7 @@ class ProductsScreen extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         tooltip: 'Add new product',
         onPressed: () {
+          productController.clearFields();
           Get.to(() => const AddNewProductScreen(),
               transition: Transition.rightToLeftWithFade);
         },
@@ -32,6 +35,7 @@ class ProductsScreen extends StatelessWidget {
         child: StreamBuilder(
           stream: productController.getProducts(),
           builder: (context, snapshot) {
+            log("${snapshot.data}snapshot");
             if (snapshot.connectionState == ConnectionState.waiting) {
               return ListView.builder(
                 physics: const BouncingScrollPhysics(),
@@ -62,67 +66,81 @@ class ProductsScreen extends StatelessWidget {
                   );
                 },
               );
-            }
-
-            return ListView.builder(
-              physics: const BouncingScrollPhysics(),
-              itemCount: snapshot.data!.length,
-              itemBuilder: (context, index) {
-                final product = snapshot.data![index];
-                return Card(
-                  child: ListTile(
-                      onTap: () {
-                        Get.to(
-                            () => ProductDetailsScreen(
-                                  product: product,
-                                ),
-                            transition: Transition.rightToLeftWithFade);
-                      },
-                      leading: ClipRRect(
-                        borderRadius: BorderRadius.circular(5),
-                        child: CachedNetworkImage(
-                          imageUrl: '$baseUrl${product.images[0]}',
-                          placeholder: (context, url) => ShimmerPro.sized(
-                              borderRadius: 2,
-                              scaffoldBackgroundColor: lightGrey,
-                              height: 50,
-                              width: 60),
-                          errorWidget: (context, url, error) =>
-                              const Icon(Icons.photo_size_select_large_rounded),
-                          width: 60,
-                          height: 50,
-                          fit: BoxFit.cover,
+            } else if (!snapshot.hasData ||
+                snapshot.data == null ||
+                snapshot.data.toString() == 'null') {
+              log(snapshot.data.toString());
+              return const Center(
+                child: Text('No products found'),
+              );
+            } else {
+              log(snapshot.data.toString());
+              return ListView.builder(
+                physics: const BouncingScrollPhysics(),
+                itemCount: snapshot.data!.length,
+                itemBuilder: (context, index) {
+                  final product = snapshot.data![index];
+                  return Card(
+                    child: ListTile(
+                        onTap: () {
+                          productController.clearFields();
+                          Get.to(
+                              () => ProductDetailsScreen(
+                                    product: product,
+                                  ),
+                              transition: Transition.rightToLeftWithFade);
+                        },
+                        leading: ClipRRect(
+                          borderRadius: BorderRadius.circular(5),
+                          child: CachedNetworkImage(
+                            imageUrl:
+                                '${URLServices.baseUrl}${product.images[0]}',
+                            placeholder: (context, url) => ShimmerPro.sized(
+                                borderRadius: 2,
+                                scaffoldBackgroundColor: lightGrey,
+                                height: 50,
+                                width: 60),
+                            errorWidget: (context, url, error) => const Icon(
+                                Icons.photo_size_select_large_rounded),
+                            width: 60,
+                            height: 50,
+                            fit: BoxFit.cover,
+                          ),
                         ),
-                      ),
-                      title: Text(product.name,
-                          maxLines: 1, overflow: TextOverflow.ellipsis),
-                      subtitle: Text(
-                        product.description,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      trailing: PopupMenuButton(
-                        itemBuilder: (context) => [
-                          const PopupMenuItem(
-                            child: ListTile(
-                              title: Text('Edit'),
-                              leading: Icon(Icons.edit),
+                        title: Text(product.name,
+                            maxLines: 1, overflow: TextOverflow.ellipsis),
+                        subtitle: Text(
+                          product.description,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        trailing: PopupMenuButton(
+                          itemBuilder: (context) => [
+                            PopupMenuItem(
+                              child: ListTile(
+                                onTap: () {
+                                  productController
+                                      .getDetailsofProductForEdit(product);
+                                },
+                                title: const Text('Edit'),
+                                leading: const Icon(Icons.edit),
+                              ),
                             ),
-                          ),
-                          PopupMenuItem(
-                            child: ListTile(
-                              onTap: () {
-                                productController.deleteProduct(product.id);
-                              },
-                              title: const Text('Delete'),
-                              leading: const Icon(Icons.delete),
+                            PopupMenuItem(
+                              child: ListTile(
+                                onTap: () {
+                                  productController.deleteProduct(product.id);
+                                },
+                                title: const Text('Delete'),
+                                leading: const Icon(Icons.delete),
+                              ),
                             ),
-                          ),
-                        ],
-                      )),
-                );
-              },
-            );
+                          ],
+                        )),
+                  );
+                },
+              );
+            }
           },
         ),
       ),

@@ -64,6 +64,11 @@ class HomeScreen extends StatelessWidget {
                     child: StreamBuilder<List<Product>>(
                       stream: productController.getPopularProducts(),
                       builder: (context, snapshot) {
+                        if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                          return const Center(
+                            child: Text('No Products'),
+                          );
+                        }
                         return ListView.builder(
                           physics: const BouncingScrollPhysics(),
                           itemCount: snapshot.data!.length,
@@ -82,7 +87,8 @@ class HomeScreen extends StatelessWidget {
                                   leading: ClipRRect(
                                     borderRadius: BorderRadius.circular(5),
                                     child: CachedNetworkImage(
-                                      imageUrl: '$baseUrl${product.images[0]}',
+                                      imageUrl:
+                                          '${URLServices.baseUrl}${product.images[0]}',
                                       placeholder: (context, url) =>
                                           ShimmerPro.sized(
                                               borderRadius: 2,

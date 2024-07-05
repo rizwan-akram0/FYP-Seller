@@ -11,8 +11,7 @@ class ChatScreen extends StatefulWidget {
   final String recipientId;
 
   const ChatScreen(
-      {Key? key, required this.senderId, required this.recipientId})
-      : super(key: key);
+      {super.key, required this.senderId, required this.recipientId});
 
   @override
   _ChatScreenState createState() => _ChatScreenState();
@@ -29,7 +28,7 @@ class _ChatScreenState extends State<ChatScreen> {
     log('Recipient: ${widget.recipientId}');
     super.initState();
     _channel = IOWebSocketChannel.connect(
-        'ws://192.168.100.7:5000/${widget.senderId}/${widget.recipientId}');
+        '${URLServices.webSocketUrl}/${widget.senderId}/${widget.recipientId}');
 
     _channel.stream.listen((message) {
       final Map<String, dynamic> data = jsonDecode(message);

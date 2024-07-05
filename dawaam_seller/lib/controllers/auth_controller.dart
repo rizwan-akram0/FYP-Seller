@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:dawaam_seller/consts/consts.dart';
 import 'package:dawaam_seller/models/user_model.dart';
+import 'package:dawaam_seller/services/notification_services.dart';
 import 'package:http/http.dart' as http;
 
 class AuthController extends GetxController {
@@ -9,6 +10,7 @@ class AuthController extends GetxController {
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
   final nameController = TextEditingController();
+  final urlController = TextEditingController();
 
   final userId = ''.obs;
   final email = ''.obs;
@@ -25,15 +27,27 @@ class AuthController extends GetxController {
 
   login() async {
     try {
+      if (emailController.text.isEmpty || passwordController.text.isEmpty) {
+        log('Please fill all fields');
+        Get.snackbar('Error', 'Please fill all fields');
+        return;
+      }
+      final productController = Get.put(ProductController());
+
+      final fcm = await NotificationService().getFCMToken();
       final body = {
         'email': emailController.text.toLowerCase().trim(),
         'password': passwordController.text,
+        'fcm': fcm,
       };
+      log(body.toString());
+      log('${URLServices.baseUrl}/seller/login');
 
       final response = await http.post(
-        Uri.parse('$baseUrl/seller/login'),
+        Uri.parse('${URLServices.baseUrl}/seller/login'),
         body: body,
       );
+      log(response.body);
 
       if (response.statusCode == 200) {
         log(response.body);
@@ -49,12 +63,15 @@ class AuthController extends GetxController {
         emailController.clear();
         passwordController.clear();
         getProfileDetails();
+        productController.getTotalOrders();
+        productController.getTotalProducts();
+
         Get.offAll(() => const Home(), transition: Transition.rightToLeft);
       } else {
-        Get.snackbar('Error', json.decode(response.body)['message']);
+        // Get.snackbar('Error', json.decode(response.body)['message']);
       }
     } catch (e) {
-      Get.snackbar('Error', e.toString());
+      // Get.snackbar('Error', e.toString());
     }
   }
 
@@ -76,7 +93,7 @@ class AuthController extends GetxController {
       log(image.value);
       log(address.value);
     } catch (e) {
-      Get.snackbar('Error', e.toString());
+      // Get.snackbar('Error', e.toString());
     }
   }
 
@@ -94,23 +111,24 @@ class AuthController extends GetxController {
 
       Get.offAll(() => const LoginScreen(), transition: Transition.rightToLeft);
     } catch (e) {
-      Get.snackbar('Error', e.toString());
+      // Get.snackbar('Error', e.toString());
     }
   }
 
   Stream<List<User>> getUsers() async* {
     try {
-      final response = await http.get(Uri.parse('$baseUrl/user/get_all_users'));
+      final response = await http
+          .get(Uri.parse('${URLServices.baseUrl}/user/get_all_users'));
 
       if (response.statusCode == 200) {
         log(response.body);
         final users = usersFromJson(response.body).data.user;
         yield users;
       } else {
-        Get.snackbar('Error', json.decode(response.body)['message']);
+        // Get.snackbar('Error', json.decode(response.body)['message']);
       }
     } catch (e) {
-      Get.snackbar('Error', e.toString());
+      // Get.snackbar('Error', e.toString());
     }
   }
 }

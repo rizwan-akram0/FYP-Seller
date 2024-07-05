@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dawaam_seller/consts/consts.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -23,9 +25,52 @@ class ProfileScreen extends StatelessWidget {
           children: [
             Column(
               children: [
-                const CircleAvatar(
-                  radius: 60,
-                  backgroundImage: AssetImage(profile),
+                InkWell(
+                  onLongPress: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: const Text("Change URL's"),
+                        content: SingleChildScrollView(
+                          child: Column(
+                            children: [
+                              TextFormField(
+                                controller: controller.urlController,
+                                decoration: const InputDecoration(
+                                  labelText: "URL",
+                                  hintText: "https://api.dawaamfoods.com",
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: const Text("Cancel"),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              final prefs = SharedPreferences.getInstance();
+                              prefs.then((value) {
+                                value.setString(
+                                    "baseUrl", controller.urlController.text);
+                              });
+                              URLServices().setURL();
+                              Navigator.pop(context);
+                            },
+                            child: const Text("Save"),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                  child: const CircleAvatar(
+                    radius: 60,
+                    backgroundImage: AssetImage(profile),
+                  ),
                 ),
                 const SizedBox(
                   width: 15,

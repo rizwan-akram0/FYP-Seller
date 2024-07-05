@@ -36,3 +36,4 @@ export 'package:dawaam_seller/widgets/large_button.dart';
 export 'package:dawaam_seller/widgets/password_input_field.dart';
 
 export 'package:dawaam_seller/models/product_model.dart';
+export 'package:dawaam_seller/services/url_services.dart';
